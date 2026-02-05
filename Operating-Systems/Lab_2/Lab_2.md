@@ -83,7 +83,7 @@ We can see each instance of mem running has allocated to separate memory, and ta
 ### htop
 The first part of this section is to "start up a few cpus and mem in the background, then run htop in another terminal."
 
-Because I'm running ubuntu in a container, I have to use a terminal multiplexer to have multiple terminal sessions. I'll be using tmux.
+Because I'm running ubuntu in a container, I have to use a terminal multiplexer to have multiple terminal sessions. I'll be using tmux. With tmux, I can create sessions with `ctrl+b` then `c`, and cycle through sessions with `ctrl+b` and `n` for next / `p` for previous. It's pretty cool!
 
 *Start up a few cpus and mem in the background*
 
@@ -115,3 +115,25 @@ We can see a nice menu of presets to sort by. Personally, I like keeping it on P
 `filter` gives us the option to filter by keywords. I filtered for "cpu", and we can see `.cpu` is the sole display.
 
 We're instructed to filter for ssh, because most people doing this assignment are using an Ubuntu VM. Because I'm using a distrobox container, not a VM, we actually don't have an ssh daemon running in the container.
+
+Next, I use `Kill (f9)` to send SIGTERM 15s to both cpu and mem, killing the programs without messing with `fg` and `jobs` .
+
+### ./Fork
+
+Now, we'll take a look at fork.c.
+![[Pasted image 20260205155039.png]]
+
+We can see this is a simple program to fork a process, and display child/parent PIDs.
+
+*gcc fork.c -o fork && ./fork*
+
+![[Pasted image 20260205155205.png]]
+
+We can see after the first run, the children show a Parent PID of 1, meaning the parent has been terminated. 
+
+### ./fork_exec 
+Let's take a look at `fork_exec`. 
+
+![[Pasted image 20260205160459.png]]
+
+We can see this will repeatedly spawn a child that calls `ls -l`, and the parent prints `Parent: child finished` once `ls -l ` runs successfully.
