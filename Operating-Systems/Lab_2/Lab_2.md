@@ -129,7 +129,7 @@ We can see this is a simple program to fork a process, and display child/parent 
 
 ![[Pasted image 20260205155205.png]]
 
-We can see after the first run, the children show a Parent PID of 1, meaning the parent has been terminated. 
+Every time we run the program and create more processes, the PID increments by 1.  Additionally, we can see after the first run, the children show a Parent PID of 1, meaning the parent has been terminated. 
 
 ### ./fork_exec 
 Let's take a look at `fork_exec`. 
