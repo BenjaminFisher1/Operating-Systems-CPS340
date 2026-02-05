@@ -137,3 +137,26 @@ Let's take a look at `fork_exec`.
 ![[Pasted image 20260205160459.png]]
 
 We can see this will repeatedly spawn a child that calls `ls -l`, and the parent prints `Parent: child finished` once `ls -l ` runs successfully.
+
+Let's use `zombie.c`  to look for zombie processes in htop.
+![[Pasted image 20260205161133.png]]
+
+In htop:
+
+![[Pasted image 20260205161339.png]]
+We can see that the child has a "Z" state, showing that it's a zombie child. Eventually, the zombie process gets cleaned up. 
+
+Now, let's observe an orphan process get reparented:
+![[Pasted image 20260205162407.png]]
+
+![[Pasted image 20260205162322.png]]
+
+
+### ./cpu_burn
+
+- Detects how many CPU cores you have
+-  Spawns one pthread per core
+-  Each thread runs a tight infinite loop doing math
+
+
+
