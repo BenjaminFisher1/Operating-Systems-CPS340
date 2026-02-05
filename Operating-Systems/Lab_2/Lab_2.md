@@ -189,3 +189,11 @@ Next, for *overload of threads* i'll change:
 
 So, we're creating more threads than cores we have available. Let's run cpu_burn again!
 
+![[Pasted image 20260205164514.png]]
+
+This time, each instance of `./cpu_burn` is only taking up ~27% of CPU, but we can see at the top all 12 of my cores are maxed out with usage. This means that even if you distribute high workload across many threads, you can still burn through resources quickly if your cores are limited.
+
+### Conclusion
+Overall, this was a great way to get some experience with htop, and get a glimpse into what goes on under the hood with processes, threads, and cores.
+
+
