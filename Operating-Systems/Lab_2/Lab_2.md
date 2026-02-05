@@ -63,3 +63,55 @@ Now, we can kill it with `ctrl+c`.
 A: With one cpu, only one program can run in the foreground.
 
 ### ./mem
+Let's open up mem.c:
+![[Pasted image 20260205145936.png]]
+
+The mem.c program uses the `malloc` function to manually allocate memory. I've seen this function previously in my Assembly/Computer Architecture course. When running mem.c, the program:
+- Allocates memory
+- Prints address of allocated memory
+- Puts zero into the first slot of the allocated memory.
+This loops every second, and increments the value stored at the saved address, as well as printing the PID of itself.
+
+Let's test it with `./mem 15`:
+![[Pasted image 20260205150228.png]]
+We can see the address of the memory we allocated, as well as watch the value of p increment, starting at 15.
+
+What about with `./mem 15 & ./mem 5`?
+![[Pasted image 20260205150443.png]]
+We can see each instance of mem running has allocated to separate memory, and takes turns incrementing their value.
+
+### htop
+The first part of this section is to "start up a few cpus and mem in the background, then run htop in another terminal."
+
+Because I'm running ubuntu in a container, I have to use a terminal multiplexer to have multiple terminal sessions. I'll be using tmux.
+
+*Start up a few cpus and mem in the background*
+
+I'll run `./mem 2 & ./cpu A`, then jump into `htop` in my other session.
+![[Pasted image 20260205152647.png]]
+
+`htop` opens us into a TUI that is a bit overwhelming at first glance: 
+![[Pasted image 20260205152813.png]]
+
+We can see `./mem and ./cpu` are sitting at the top of our process list. 
+![[Pasted image 20260205152903.png]]
+
+Let's try a few functions:
+
+ `sort (f6)` 
+![[Pasted image 20260205153021.png]]
+
+We can see a nice menu of presets to sort by. Personally, I like keeping it on PERCENT_CPU. 
+
+`tree (f5)`
+![[Pasted image 20260205153235.png]]
+
+`tree` shows us a parent/child tree of which processes spawned which. 
+
+
+`filter (f4)` 
+![[Pasted image 20260205153744.png]]
+
+`filter` gives us the option to filter by keywords. I filtered for "cpu", and we can see `.cpu` is the sole display.
+
+We're instructed to filter for ssh, because most people doing this assignment are using an Ubuntu VM. Because I'm using a distrobox container, not a VM, we actually don't have an ssh daemon running in the container.
