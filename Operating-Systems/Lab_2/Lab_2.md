@@ -158,5 +158,34 @@ Now, let's observe an orphan process get reparented:
 -  Spawns one pthread per core
 -  Each thread runs a tight infinite loop doing math
 
+![[Pasted image 20260205162845.png]]
 
+Here we go.... 
+
+We can see almost immediately, my CPU usage hits ~100% for each process for `./cpu_burn`
+
+![[Pasted image 20260205163002.png]]
+
+After letting cpu_burn run for a bit, I sent SIGTERM 15s to ./cpu_burn, and my usage returned to normal.
+
+![[Pasted image 20260205163035.png]]
+
+*Now modify the code to run with:*
+*▪ Less threads than cores*
+*• Number varies based on your vm setup, ex. You have 5 cores and set to 2*
+*▪ An overload of threads*
+	*• int cores = sysconf(SC_NPROCESSORS_ONLN)*
+
+Let's open up cpu_burn.c:
+
+![[Pasted image 20260205163923.png]]
+
+For *less threads than cores*, I'll simply change the for loop to execute 4 less times than the amount of cores we have.
+
+![[Pasted image 20260205163953.png]]
+
+Next, for *overload of threads* i'll change:
+![[Pasted image 20260205164127.png]]
+
+So, we're creating more threads than cores we have available. Let's run cpu_burn again!
 
