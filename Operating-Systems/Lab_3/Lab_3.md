@@ -73,7 +73,7 @@ Can you think of any other ways to do the scheduling?
 For this section, we attempt to alter the code of the Java GUI we were given to include new custom algorithms. Other students have reported many issues with this, so I don't fully expect to create a working product.
 
 #### *Add your algorithm to work with the Java GUI:*
-Let's see if I can implement Longest Job First.
+Let's see if I can implement Longest Job First. We need to open up the source code for the Java GUI in VSCODE.
 
 
 
