@@ -66,10 +66,14 @@ Do you have any idea how to blend priority, fairness and turnaround times?
 - Round Robin with an appropriate quantum time
 
 Can you think of any other ways to do the scheduling?
-- Perhaps a scheduling algorithm that functions like round robin, but has different queues for priorities with thresholds such as >5 goes in Q1, >3 goes in Q2, <=3 goes in Q3 etc.
+- The opposite of SJF:
+	- LJF: Longest Job First!
 
 ### Implement
 For this section, we attempt to alter the code of the Java GUI we were given to include new custom algorithms. Other students have reported many issues with this, so I don't fully expect to create a working product.
+
+#### *Add your algorithm to work with the Java GUI:*
+Let's see if I can implement Longest Job First.
 
 
 
