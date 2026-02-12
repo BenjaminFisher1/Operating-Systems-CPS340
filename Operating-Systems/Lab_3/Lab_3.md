@@ -75,6 +75,22 @@ For this section, we attempt to alter the code of the Java GUI we were given to 
 #### *Add your algorithm to work with the Java GUI:*
 Let's see if I can implement Longest Job First. We need to open up the source code for the Java GUI in VSCODE.
 
+All I did was copy paste the code for ShortestJobFirst.java reverse the sorting, then in GUI.java I added LJF to the JComboBox : 
+`option = new JComboBox(new String[]{"FCFS", "SJF", "SRT", "PSN", "PSP", "RR", "LJF"});
+And to the switch cases case "LJF":
+
+`scheduler = new LongestJobFirst();
+
+`break;`
+
+option.setBounds(390, 420, 85, 20);`
+
+![[Pasted image 20260212163837.png]]
 
 
+
+*Write a scheduling algorithm that works like PSN but decreases the priority of any*
+*processes by one waiting in the queue for X+ (i.e. 3+) time. Why might we want to decrease priority of processes after a time period?
+
+bruh
 
