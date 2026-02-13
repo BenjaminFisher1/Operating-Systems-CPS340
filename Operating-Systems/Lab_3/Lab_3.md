@@ -123,13 +123,13 @@ Next, I compared the waiting times with our `WAIT` variable and decreased if abo
 ```java
 if (wait1 >= WAIT){
 
-priorityLevel1++;
+	priorityLevel1++;
 
 }
 
 if (wait2 >= WAIT){
 
-prioritylevel2++;
+	prioritylevel2++;
 
 }
 ```
@@ -141,7 +141,7 @@ if (priorityLevel1 ==priorityLevel2)
 
 {
 
-return 0;
+	return 0;
 
 }
 
@@ -149,18 +149,44 @@ else if (priorityLevel1 < priorityLevel2)
 
 {
 
-return -1;
-
+	return -1;
+	
 }
 
 else
 
 {
-
-return 1;
+	
+	return 1;
 
 }
 ```
 
 I can imagine this sort of process scheduling could be useful in a situation like a RTOS for something like missile guidance, where a process that takes too long to run is less important to run, and ultimately could just be ignored entirely.
+
+
+*Write a scheduling algorithm that works like PSN but decreases the priority of any*
+*processes by one waiting in queue for X+ (i.e. 3+) times and increases the priority of a*
+*process leaving CPU during the context switch*
+
+All I did here was copy the class I just made into a file called `SwitchingPriorityNonPreemptive.java` and make 1 change:
+
+```java
+for (Row row : rows){
+
+	if(row.getPriorityLevel() > 1){
+	
+		row.setPriorityLevel(row.getPriorityLevel() - 1);
+	
+	}
+
+
+}
+``` 
+
+This boosts the priority of any processes coming off of the CPU during the context switch.
+
+This could be useful to be more "fair" to processes that are stuck waiting for too long, for example in a load balancing situation.
+
+
 

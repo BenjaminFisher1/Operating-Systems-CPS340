@@ -1,0 +1,101 @@
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class SwitchingPriorityNonPreemptive extends CPUScheduler
+{
+
+    final int WAIT = 3;
+    @Override
+    public void process()
+    {
+        Collections.sort(this.getRows(), (Object o1, Object o2) -> {
+            Row row1 = (Row) o1;
+            Row row2 = (Row) o2;
+
+            int wait1 = time -row1.getArrivalTime();
+            int wait2 = time -row2.getArrivalTime();
+
+            int priorityLevel1 = row1.getPriorityLevel();
+            int priorityLevel2 = row2.getPriorityLevel();
+
+            if (wait1 >= WAIT){
+                priorityLevel1++;
+            }
+            if (wait2 >= WAIT){
+                prioritylevel2++;
+            }
+
+            if (priorityLevel1 ==priorityLevel2)
+            {
+                return 0;
+            }
+            else if (priorityLevel1 < priorityLevel2)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        });
+        
+        List<Row> rows = Utility.deepCopy(this.getRows());
+        int time = rows.get(0).getArrivalTime();
+        
+        while (!rows.isEmpty())
+        {
+            List<Row> availableRows = new ArrayList();
+            
+            for (Row row : rows)
+            {
+                if (row.getArrivalTime() <= time)
+                {
+                    availableRows.add(row);
+                }
+            }
+            
+            Collections.sort(availableRows, (Object o1, Object o2) -> {
+                if (((Row) o1).getPriorityLevel()== ((Row) o2).getPriorityLevel())
+                {
+                    return 0;
+                }
+                else if (((Row) o1).getPriorityLevel() < ((Row) o2).getPriorityLevel())
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            });
+            
+            Row row = availableRows.get(0);
+            this.getTimeline().add(new Event(row.getProcessName(), time, time + row.getBurstTime()));
+            time += row.getBurstTime();
+            
+            for (int i = 0; i < rows.size(); i++)
+            {
+                if (rows.get(i).getProcessName().equals(row.getProcessName()))
+                {
+                    rows.remove(i);
+                    break;
+                }
+            }
+
+
+            for (Row row : rows){
+                if(row.getPriorityLevel() > 1){
+                    row.setPriorityLevel(row.getPriorityLevel() - 1);
+                }
+            }
+        }
+        
+        for (Row row : this.getRows())
+        {
+            row.setWaitingTime(this.getEvent(row).getStartTime() - row.getArrivalTime());
+            row.setTurnaroundTime(row.getWaitingTime() + row.getBurstTime());
+        }
+    }
+}
