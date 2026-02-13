@@ -27,11 +27,11 @@ public class DecreasingPriorityNonPreemptive extends CPUScheduler
                 prioritylevel2++;
             }
 
-
+            if (priorityLevel1 ==priorityLevel2)
             {
                 return 0;
             }
-            else if (((Row) o1).getArrivalTime() < ((Row) o2).getArrivalTime())
+            else if (priorityLevel1 < priorityLevel2)
             {
                 return -1;
             }

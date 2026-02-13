@@ -76,12 +76,16 @@ For this section, we attempt to alter the code of the Java GUI we were given to 
 Let's see if I can implement Longest Job First. We need to open up the source code for the Java GUI in VSCODE.
 
 All I did was copy paste the code for ShortestJobFirst.java reverse the sorting, then in GUI.java I added LJF to the JComboBox : 
-`option = new JComboBox(new String[]{"FCFS", "SJF", "SRT", "PSN", "PSP", "RR", "LJF"});
+```java
+option = new JComboBox(new String[]{"FCFS", "SJF", "SRT", "PSN", "PSP", "RR", "LJF"});
+```
 And to the switch cases case "LJF":
 
-`scheduler = new LongestJobFirst();
+```java 
+scheduler = new LongestJobFirst();
 
-`break;`
+break;
+```
 
 option.setBounds(390, 420, 85, 20);`
 
@@ -91,4 +95,72 @@ option.setBounds(390, 420, 85, 20);`
 
 *Write a scheduling algorithm that works like PSN but decreases the priority of any*
 *processes by one waiting in the queue for X+ (i.e. 3+) time. Why might we want to decrease priority of processes after a time period?
+
+For this scheduling algorithm, I started by working off the PSN class. 
+
+I added a `WAIT` variable to state how long a process can sit in the queue before decreasing priority:
+
+```java
+final int WAIT = 3;
+```
+
+Then I declared variables to track each process's wait time and priority level.
+
+```java 
+int wait1 = time -row1.getArrivalTime();
+
+int wait2 = time -row2.getArrivalTime();
+
+  
+
+int priorityLevel1 = row1.getPriorityLevel();
+
+int priorityLevel2 = row2.getPriorityLevel();
+```
+
+Next, I compared the waiting times with our `WAIT` variable and decreased if above.
+
+```java
+if (wait1 >= WAIT){
+
+priorityLevel1++;
+
+}
+
+if (wait2 >= WAIT){
+
+prioritylevel2++;
+
+}
+```
+
+Finally, we compare the priorities of the two rows and return value to sort accordingly:
+
+```java
+if (priorityLevel1 ==priorityLevel2)
+
+{
+
+return 0;
+
+}
+
+else if (priorityLevel1 < priorityLevel2)
+
+{
+
+return -1;
+
+}
+
+else
+
+{
+
+return 1;
+
+}
+```
+
+I can imagine this sort of process scheduling could be useful in a situation like a RTOS for something like missile guidance, where a process that takes too long to run is less important to run, and ultimately could just be ignored entirely.
 
