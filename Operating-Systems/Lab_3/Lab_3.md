@@ -92,5 +92,3 @@ option.setBounds(390, 420, 85, 20);`
 *Write a scheduling algorithm that works like PSN but decreases the priority of any*
 *processes by one waiting in the queue for X+ (i.e. 3+) time. Why might we want to decrease priority of processes after a time period?
 
-bruh
-
