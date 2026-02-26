@@ -29,17 +29,47 @@ Before we jump into the implementation, we're instructed to do some reading of t
 - Why was the hashmap data structure introduced?
 	-  To pass the O(n) issues with arrays/arraylists by using hash function to achieve O(1) lookup.
 
+MLFQ: 
+
+- Why do you think the quantum times differ?
+	- To optimize fairness and system performance
+- What do you think the boost time is for?
+	- To allow processes which have been stuck in low level queues to have a chance at high priority again
+- Why is the lowest priority queue using FCFS?
+	- Because the processes in this queue are known to take a long time, and a majority of processes should be completed before hitting the FCFS queue, it's okay if a low priority process gets stuck waiting for a while.
+
 We're given the following rules for the MLFQ algorithm:
 
-- **Rule 1:** If Priority(A) > Priority(B), A runs (B doesn’t).
-- **Rule 2:** If Priority(A) = Priority(B), A & B run in round-robin fash-
-ion using the time slice (quantum length) of the given queue.
-- **Rule 3:** When a job enters the system, it is placed at the highest
-priority (the topmost queue).
-- **Rule 4:** Once a job uses up its time allotment at a given level (re-
-gardless of how many times it has given up the CPU), its priority is
-reduced (i.e., it moves down one queue).
-- **Rule 5:** After some time period S, move all the jobs in the system
-to the topmost queue.
+Let's implement the MLFQ algorithm now using these rules.
 
-Let's implement the MLFQ algorithm now.
+##### MLFQ Implementation
+
+First, let's add MLFQ as an option on our dropdown menu:
+
+```java
+option = new JComboBox(new String[]{"FCFS", "SJF", "SRT", "PSN", "PSP", "RR", "LJF", "DPSN", "SPSN", "MLFQ"});
+```
+
+I also need to add a case to the switch statement:
+
+```java
+case "MLFQ":
+	String tq2 = JOptionPane.showInputDialog("Time Quantum");
+	if (tq2 == null) {
+		return;
+	}
+	scheduler = new MultiLevelFeedbackQueue();
+	scheduler.setTimeQuantum(Integer.parseInt(tq2));
+	break;
+```
+
+This will prompt the user to insert a quantum time value upon selecting MLFQ.
+
+
+Now, I'll make a new file `MultiLevelFeedbackQueue.java` and start implementing.
+
+![[Pasted image 20260219165022.png]]
+![[Pasted image 20260219165042.png]]
+![[Pasted image 20260219165100.png]]![[Pasted image 20260219165116.png]]
+
+I just screenshotted my code because copy pasting the text was messing up indentation.
