@@ -37,3 +37,5 @@ Ideas:
 Clienthandle implements runnable:
 Threads spawned by pool/executor service contains submitted runnable (ClientHandler)
 - we need to take a given thread and access the running clienthandler.
+
+My server clients connection is sort of working, they can see messages from eachother, but client A will only see messages from client B if client A sends a message first. I think this is happening because the client waits for user input from the client before loading responses (artifact of copying some code from prev examples for 1to1 communication.)
