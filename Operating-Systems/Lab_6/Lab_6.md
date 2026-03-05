@@ -31,3 +31,9 @@ socket programs*
 ▪ Ex: There are A, B, C, D, E as clients.  
 ▪ Client A sends “Hi” to server.  
 ▪ Server sends “Hi” to B, C, D, E
+
+
+Ideas:
+Clienthandle implements runnable:
+Threads spawned by pool/executor service contains submitted runnable (ClientHandler)
+- we need to take a given thread and access the running clienthandler.
