@@ -72,3 +72,6 @@ Files are in pipes folder.
 
 ### Example 1:
 - *Read over and run BytePipeExample.java*
+	- This is basic producer/consumer pipe using Threads 
+- Run with the 2 producers and 1 consumer
+	- 

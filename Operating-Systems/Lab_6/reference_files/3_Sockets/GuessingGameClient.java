@@ -33,6 +33,7 @@ public class GuessingGameClient {
 
             String response = in.readLine();
             System.out.println("Server says: " + response);
+
         }
 
         socket.close();

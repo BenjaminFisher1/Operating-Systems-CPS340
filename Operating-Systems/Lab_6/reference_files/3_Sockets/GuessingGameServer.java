@@ -37,6 +37,7 @@ class GGClientHandler implements Runnable {
         this.socket = socket;
     }
 
+    int guessCount = 0;
     @Override
     public void run() {
         try (
@@ -62,14 +63,14 @@ class GGClientHandler implements Runnable {
 
                 try {
                     int guess = Integer.parseInt(line);
-                
+                    guessCount++;
                     if (guess < randomNumber){
                         out.println("Too low, guess again buddy");
                     }
                     else if (guess > randomNumber){
                         out.println("Too high!!! Ha Ha Ha");
                     } else {
-                        out.println("YOU GUESSED THE NUMBER");
+                        out.println("YOU GUESSED THE NUMBER" + "Took you " + guessCount + " guesses");
                         break;
                     }
 
