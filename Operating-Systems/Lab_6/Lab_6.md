@@ -74,4 +74,54 @@ Files are in pipes folder.
 - *Read over and run BytePipeExample.java*
 	- This is basic producer/consumer pipe using Threads 
 - Run with the 2 producers and 1 consumer
-	- 
+	```bash
+	Consumer read: Line 1 from producer 2
+	Consumer read: Line 1 from producer
+	Consumer read: Line 2 from producer 2
+	Consumer read: Line 2 from producer
+	Consumer read: Line 3 from producer
+	Consumer read: Line 3 from producer 2
+	Consumer read: Line 4 from producer
+	Consumer read: Line 4 from producer 2
+	```
+	
+	
+Here, the consumer double-reads for each line, getting one input from each producer.
+
+
+- Run with 1 producer and 2 consumers
+```bash
+  Consumer read: Line 0 from producer
+Consumer read: Line 1 from producer
+Consumer2 read: Line 2 from producer
+Consumer2 read: Line 3 from producer
+Consumer read: Line 4 from producer
+Consumer read: Line 5 from producer
+Consumer read: Line 6 from producer
+Consumer2 read: Line 7 from producer
+```
+
+In this situation, the consumers fight over the data being sent by the producer, and it is split between them.
+
+- Run with 2 producers and 2 consumers
+	```bash 
+		Consumer read: Line 3 from producer 2
+		Consumer2 read: Line 4 from producer
+		Consumer2 read: Line 4 from producer 2
+		Consumer2 read: Line 5 from producer 2
+		Consumer2 read: Line 5 from producer
+		Consumer read: Line 6 from producer 2
+		Consumer read: Line 6 from producer
+		Consumer read: Line 7 from producer
+		Consumer2 read: Line 7 from producer 2
+		Consumer2 read: Line 8 from producer
+		Consumer read: Line 8 from producer 2
+		Consumer2 read: Line 9 from producer 2
+		Consumer2 read: Line 9 from producer
+		Consumer read: Line 10 from producer
+		Consumer read: Line 10 from producer 2
+		Consumer2 read: Line 11 from producer 2
+		etc
+	```
+
+We can see the producers and consumers flip-flop between 1-1, 1-2, and 2-2 at random.

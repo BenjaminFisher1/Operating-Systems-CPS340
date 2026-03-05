@@ -26,7 +26,7 @@ public class BytePipeExample
 							e.printStackTrace();
 						}
 					});
-		/*Thread producer2=new Thread(()->
+		Thread producer2=new Thread(()->
 					{
 						try(PrintWriter pw=new PrintWriter(pout))
 						{
@@ -41,7 +41,7 @@ public class BytePipeExample
 							e.printStackTrace();
 						}
 					});
-		*/			
+				
         Thread consumer=new Thread(()->
 					{
 						try(BufferedReader br=new BufferedReader(new InputStreamReader(pin))) 
@@ -55,7 +55,7 @@ public class BytePipeExample
 							e.printStackTrace();
 						}
 					});
-		/*Thread consumer2=new Thread(()->
+		Thread consumer2=new Thread(()->
 					{
 						try(BufferedReader br=new BufferedReader(new InputStreamReader(pin))) 
 						{
@@ -68,10 +68,10 @@ public class BytePipeExample
 							e.printStackTrace();
 						}
 					});		
-		*/					
+						
         consumer.start();
-		//consumer2.start();
+		consumer2.start();
         producer.start();
-		//producer2.start();
+		// producer2.start();
     }
 }
