@@ -67,10 +67,10 @@ Server says: YOU GUESSED THE NUMBER
 ```
 
 
-#### 4. Pipes
+### 4. Pipes
 Files are in pipes folder.
 
-### Example 1:
+#### Example 1:
 - *Read over and run BytePipeExample.java*
 	- This is basic producer/consumer pipe using Threads 
 - Run with the 2 producers and 1 consumer
@@ -83,6 +83,7 @@ Files are in pipes folder.
 	Consumer read: Line 3 from producer 2
 	Consumer read: Line 4 from producer
 	Consumer read: Line 4 from producer 2
+	etc
 	```
 	
 	
@@ -99,6 +100,7 @@ Consumer read: Line 4 from producer
 Consumer read: Line 5 from producer
 Consumer read: Line 6 from producer
 Consumer2 read: Line 7 from producer
+etc
 ```
 
 In this situation, the consumers fight over the data being sent by the producer, and it is split between them.
@@ -125,3 +127,24 @@ In this situation, the consumers fight over the data being sent by the producer,
 	```
 
 We can see the producers and consumers flip-flop between 1-1, 1-2, and 2-2 at random.
+
+#### Example 2
+*Read over and run CharacterPipeExample.java*
+
+
+#### Example 3
+
+
+
+### Practice
+
+#### PipeA
+
+
+#### PipeB
+
+
+#### PipeC
+
+
+#### Observe A,B,C,D,E
