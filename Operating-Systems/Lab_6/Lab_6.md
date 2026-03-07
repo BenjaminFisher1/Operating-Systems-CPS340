@@ -169,8 +169,32 @@ This is cool, it looks like ProcessBuilder is safer to isolate child processes a
 *Fill in code to solve PipeA.java*
 This is a simple Hello World program using pipes.
 
+We have the option of solving using byte or Character approach. Since we're just printing Hello World, I'll go with the Character approach.
 
+Need to user InterruptedException on consumer.join(), not IOException
+
+```bash
+ javac PipeA.java
+PipeA.java:19: error: unreported exception IOException; must be caught or declared to be thrown
+		PipedReader pr=new PipedReader(pw);
+```
+
+Tried fixing by wrapping pr constuctor in try catch but since pr used later in try catch for br this fails. Just going to put IOException in main.
+
+Now we compile!
+
+Let's run:
+
+```
+📦[b@ubuntu pipes]$ java PipeA
+Producer: I'm sending the message.
+Consumer: The Producer says: Hello world!
+```
+
+Awesome! It's working properly.
 #### PipeB
+
+
 
 
 #### PipeC
