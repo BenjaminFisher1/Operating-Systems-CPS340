@@ -10,7 +10,7 @@ Handling large data without loading everything into memory
 import java.io.*;
 public class PipeC{
 	public static void main(String[] args) throws IOException, InterruptedException{
-		final String filePath = "data.txt";
+		final String filePath = "data_10mb.txt";
 
 		final int bufferSize = 8192; 
 
@@ -37,7 +37,7 @@ public class PipeC{
 
 		//producer
 		File file = new File(filePath);
-		System.out.printf("Producer: reading '%s' (%d MB), bf.length(uffer=%d bytes%n", filePath, file.length() / (1024 * 1024), bufferSize);
+		System.out.printf("Producer: reading '%s' (%d MB), buffer=%d bytes%n", filePath, file.length() / (1024 * 1024), bufferSize);
 
 		long startTime = System.currentTimeMillis();
 
