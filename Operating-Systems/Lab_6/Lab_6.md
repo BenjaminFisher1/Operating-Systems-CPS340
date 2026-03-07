@@ -217,6 +217,15 @@ Consumer errored:Write end dead
 
 I think I have some sloppy logic with closing stuff up after finished working with it (hence the FuncMapper and Consumer errors) but otherwise this works great!
 #### PipeC
+- *Use pipes to read and write large amounts of data*
+- *Experiment with different file sizes and buffer sizes and observe time changes*
+- *Measure throughput in MB/s*
+
+I'll have PipeC read data from a file called `data.txt`, which will contain a bunch of text data. 
+
+Trying to reuse frame from PipeA for this.
+
+I've got some junk data text files ranging from 10 mb to 100 mb filled with lorem ipsum.
 
 
 #### Observe A,B,C,D,E
