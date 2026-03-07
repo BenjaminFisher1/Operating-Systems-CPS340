@@ -227,5 +227,122 @@ Trying to reuse frame from PipeA for this.
 
 I've got some junk data text files ranging from 10 mb to 100 mb filled with lorem ipsum.
 
+10 mb file:
+```
+java PipeC
+Producer: reading 'data_10mb.txt' (9 MB), buffer=8192 bytes
+Throughput: 41.28 MB/s
+Consumer: Lines Read: 91980
+```
 
+
+50 mb file:
+```
+java PipeC
+Producer: reading 'data_50mb.txt' (49 MB), buffer=8192 bytes
+Throughput: 77.04 MB/s
+Consumer: Lines Read: 459901
+```
+
+100 mb file:
+``` 
+java PipeC
+Producer: reading 'data_100mb.txt' (99 MB), buffer=8192 bytes
+Throughput: 73.55 MB/s
+Consumer: Lines Read: 919803
+
+```
+
+
+Let's shrink the buffer to 1 kb and rerun.
+
+
+10 mb file:
+```
+java PipeC
+Producer: reading 'data_10mb.txt' (9 MB), buffer=1024 bytes
+Throughput: 42.25 MB/s
+Consumer: Lines Read: 91980
+```
+
+
+50 mb file:
+
+```
+java PipeC
+Producer: reading 'data_50mb.txt' (49 MB), buffer=1024 bytes
+Throughput: 61.87 MB/s
+Consumer: Lines Read: 459901
+```
+
+
+100 mb file:
+```
+java PipeC
+Producer: reading 'data_100mb.txt' (99 MB), buffer=1024 bytes
+Throughput: 75.92 MB/s
+Consumer: Lines Read: 919803
+
+```
+
+We can see a smaller buffer size speeds up the 10 mb and 100 mb file reads, but slows down the 50 mb file read.
+
+I looked into it, and this can be caused by the java compiler taking a while to fully optimize code. By 100 mb, the compiler is warmed up and optimizing efficiently, which explains the throughput increase from 50 mb to 100 mb.
 #### Observe A,B,C,D,E
+
+PipeA.c:
+```
+gcc PipeA.c -o a
+📦[b@ubuntu pipes]$ ./a
+Child received: Hello Child!
+```
+
+We can see a simple parent/child communication using forks in c.
+
+PipeB.c
+```
+📦[b@ubuntu pipes]$ gcc PipeB.c -o b
+📦[b@ubuntu pipes]$ ./b
+Parent received: 14
+```
+
+PipeB uses a parent/child structure to do basic multiplication.
+
+PipeC.c
+```📦[b@ubuntu pipes]$ gcc PipeC.c -o c
+📦[b@ubuntu pipes]$ ./c
+Consumer got 0 squared = 0
+Consumer got 3 squared = 9
+Consumer got 0 squared = 0
+Consumer got 9 squared = 81
+Consumer got 1 squared = 1
+Consumer got 2 squared = 4
+Consumer got 7 squared = 49
+Consumer got 7 squared = 49
+Consumer got 0 squared = 0
+Consumer got 3 squared = 9
+```
+
+This program is generating random numbers on the producer, and using the consumer to square and return them.
+
+PipeD.c
+
+```📦[b@ubuntu pipes]$ gcc PipeD.c -o d
+📦[b@ubuntu pipes]$ ./d
+[Parent] Sending number: 42
+[Child] Received 42, sending back 84
+[Parent] Received from child: 84
+Communication complete.
+```
+
+Uses explicitly defined pipes to have parent send a number to child, child multiplies it by 2 and returns it.
+
+PipeE.c
+
+```
+📦[b@ubuntu pipes]$ gcc PipeE.c -o e
+📦[b@ubuntu pipes]$ ./e
+Total sum from children: 28
+```
+
+This program spawns multiple children to add a list of numbers and report the result back to one place.
