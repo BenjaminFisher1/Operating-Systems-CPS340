@@ -131,14 +131,43 @@ We can see the producers and consumers flip-flop between 1-1, 1-2, and 2-2 at ra
 #### Example 2
 *Read over and run CharacterPipeExample.java*
 
+This is a basic producer/consumer pipe example without threads. We can see two different ways to create and connect a PipedWriter.
+
+Run:
+```bash
+java CharacterPipeExample 
+Read from PipedReader: Hello from PipedWriter
+```
+
+*Read over and run CharacterPipeExample2.java*
+
+This is an example of a producer/consumer pipe using threads. 
+
+Run:
+```bash
+java CharacterPipeExample2 
+Reader thread received: Message from writer thread
+```
 
 #### Example 3
+*In C we can create child processes and use pipes, see PipeD.c. In Java, we can ‘simulate’ this by using threads, see PipeD.java*
+
+Comparing the two files, it seems like declaring pipes in C gives us more-fine grain control over pipes by being able to fork() directly from the process. In Java, we have to simulate this with a workaround such as spawning a thread for the child. 
+
+*In Java, we can also use ProcessBuilder, see PipeD2.java*
+
+ProcessBuilder is another fork() work around, but this one spawns the processes with their own heap, stack, etc, whereas manually spawning child threads will give them all a shared memory space.
+
+This is cool, it looks like ProcessBuilder is safer to isolate child processes as opposed to Java's threads. 
+
 
 
 
 ### Practice
 
 #### PipeA
+*Fill in code to solve PipeA.java*
+This is a simple Hello World program using pipes.
 
 
 #### PipeB
