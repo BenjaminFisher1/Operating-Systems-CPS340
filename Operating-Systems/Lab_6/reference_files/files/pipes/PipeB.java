@@ -1,6 +1,102 @@
 import java.io.*;
 public class PipeB
 {
+	public static void main(String[] args) throws IOException, InterruptedException{
+		//Producer
+		PipedWriter prodWriter = new PipedWriter();
+
+		//filter
+		PipedWriter filterWriter = new PipedWriter();
+		PipedReader filterReader = new PipedReader(prodWriter);
+		
+
+		//funcMapper
+		PipedWriter funcWriter = new PipedWriter();
+		PipedReader funcReader = new PipedReader(filterWriter);
+	
+
+		//consumer (prints data)
+		PipedWriter consWriter = new PipedWriter();
+		PipedReader consReader = new PipedReader(funcWriter);
+		
+
+		ProcessBuilder pb = new ProcessBuilder(
+			"java", "-cp", System.getProperty("java.class.path"),
+			PipeB.class.getName(), "--child"
+		);
+
+		pb.redirectInput(ProcessBuilder.Redirect.PIPE);
+		pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
+
+		//filter thread
+
+		Thread filter = new Thread(() -> {
+			try (BufferedReader br = new BufferedReader(filterReader)){
+				String line;
+				//filter by even nums
+				while ((line = br.readLine()) != null) {
+					int num = Integer.parseInt(line);
+					if (num % 2 == 0) {
+						filterWriter.write(line + "\n");
+					}
+				}
+
+			} catch (IOException e){
+					System.err.println("Filter errored:" + e.getMessage());
+			}
+		});
+
+		//funcMapper thread
+		Thread funcMapper = new Thread(() -> {
+			try (BufferedReader br = new BufferedReader(funcReader)){
+				String line;
+				//map by squaring
+				while ((line = br.readLine()) != null) {
+					int num = Integer.parseInt(line);
+					funcWriter.write((num * num) + "\n");
+				}
+
+			} catch (IOException e){
+					System.err.println("FuncMapper errored:" + e.getMessage());
+			}
+		});
+
+		//consumer thread
+		Thread consumer = new Thread(() -> {
+			try (BufferedReader br = new BufferedReader(consReader)){
+				String line;
+				while ((line = br.readLine()) != null) {
+					System.out.println("Consumer received: " + line);
+				}
+
+			} catch (IOException e){
+					System.err.println("Consumer errored:" + e.getMessage());
+			}
+		});
+
+		//Producer
+		try(PrintWriter prw = new PrintWriter(prodWriter)){
+			for (int i = 0; i < 10; i++) {
+				prw.println(i);
+			}
+		}
+
+		try {
+			filter.start();
+			funcMapper.start();
+			consumer.start();
+
+			filter.join();
+			funcMapper.join();
+			consumer.join();
+		} catch (InterruptedException e) {
+			System.err.println("Thread join errored:" + e.getMessage());
+		}
+
+
+
+
+	}
 	/**
 		Pipes can be chained together in a pipeline
 		
