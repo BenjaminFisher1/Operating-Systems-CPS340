@@ -194,9 +194,28 @@ Consumer: The Producer says: Hello world!
 Awesome! It's working properly.
 #### PipeB
 
+PipeB chains multiple pipes to make a data pipeline.
 
+Producer->Filter->Mapper->Consumer
 
+My version of PipeB workflow:
+- Producer pass numbers 1-10
+- Filter only passes even nums
+- Map squares each num
+- Consumer prints each number it receives
 
+```bash
+📦[b@ubuntu pipes]$ java PipeB.java
+FuncMapper errored:Write end dead
+Consumer received: 0
+Consumer received: 4
+Consumer received: 16
+Consumer received: 36
+Consumer received: 64
+Consumer errored:Write end dead
+```
+
+I think I have some sloppy logic with closing stuff up after finished working with it (hence the FuncMapper and Consumer errors) but otherwise this works great!
 #### PipeC
 
 
