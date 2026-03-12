@@ -446,4 +446,21 @@ Constraints: You should have multiple threads as readers and multiple threads as
 *Challenge: You can use a shared file as the buffer area.*
 
 
- 
+ I'm using two semaphores, one for a read counter, and one for a write lock. I'm also using a stringbuilder as a buffer.
+
+Run using 5 readers and 3 writers:
+
+```
+📦[b@ubuntu Myfiles]$ javac mraw.java 
+📦[b@ubuntu Myfiles]$ java mraw
+R2 read: buffer: 
+R4 read: buffer: 
+R3 read: buffer: 
+R1 read: buffer: 
+R5 read: buffer: 
+W1 wrote to buffer.
+W2 wrote to buffer.
+W3 wrote to buffer.
+```
+
+Looks good!
