@@ -1,0 +1,1 @@
+First part of this lab is to trace out allocation algorithms first fit, best fit, and worst fit on 4 separate data sets. I've done this scratch work and will upload the scans of my paper in the repo.
