@@ -318,6 +318,7 @@ Virtual Address Trace
 ```
 
 ### Segmentation:
+
 1. *First let’s use a tiny address space to translate some addresses. Here’s
 	a simple set of parameters with a few different random seeds; can
 	you translate the addresses?
@@ -422,9 +423,11 @@ Virtual Address Trace
 ```
 
 
-| VA 0 |     |
-| ---- | --- |
-| VA 1 |     |
-| VA 2 |     |
-| VA 3 |     |
-| VA 4 |     |
+| VA 0 | Valid in seg1: 128 - 122 = 6, 512 -6 = 506 |
+| ---- | ------------------------------------------ |
+| VA 1 | Valid in seg1, 128-121 = 7, 512 - 7 = 505  |
+| VA 2 | Valid in seg0, 0 +7 = 7                    |
+| VA 3 | Valid in seg 0, 0 + 10 = 10                |
+| VA 4 | Seg1 violation, 128 - 106 = 22 > 20        |
+
+### Segmentation Faults and Memory Leaks
