@@ -330,7 +330,7 @@ Virtual Address Trace
 	-L 20 -s 2*
 
 
- segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 0
+ **segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 0**
 
 ```
 python3 segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 0
@@ -358,10 +358,73 @@ Virtual Address Trace
 
 | VA 0 | Valid using Segment 1, 128 - 108 = 20 = segment 1 limit |
 | ---- | ------------------------------------------------------- |
-| VA 1 |                                                         |
-| VA 2 |                                                         |
-| VA 3 |                                                         |
-| VA 4 |                                                         |
+| VA 1 | seg1 violation                                          |
+| VA 2 | seg0 violation                                          |
+| VA 3 | seg0 violation                                          |
+| VA 4 | seg1 violation                                          |
+
+**segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 1**
+
+```
+python3 segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 1
+ARG seed 1
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x00000011 (decimal:   17) --> PA or segmentation violation?
+  VA  1: 0x0000006c (decimal:  108) --> PA or segmentation violation?
+  VA  2: 0x00000061 (decimal:   97) --> PA or segmentation violation?
+  VA  3: 0x00000020 (decimal:   32) --> PA or segmentation violation?
+  VA  4: 0x0000003f (decimal:   63) --> PA or segmentation violation?
+```
 
 
 
+| VA 0 | Valid in seg0: 0 + 17 = 17 < 20     |
+| ---- | ----------------------------------- |
+| VA 1 | Valid in seg1: 512 - 108 = 412 > 20 |
+| VA 2 | seg1 violation                      |
+| VA 3 | seg0 violation                      |
+| VA 4 | seg0 violation                      |
+
+**segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 2***
+
+```
+python3 segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 2
+ARG seed 2
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x0000007a (decimal:  122) --> PA or segmentation violation?
+  VA  1: 0x00000079 (decimal:  121) --> PA or segmentation violation?
+  VA  2: 0x00000007 (decimal:    7) --> PA or segmentation violation?
+  VA  3: 0x0000000a (decimal:   10) --> PA or segmentation violation?
+  VA  4: 0x0000006a (decimal:  106) --> PA or segmentation violation?
+
+```
+
+
+| VA 0 |     |
+| ---- | --- |
+| VA 1 |     |
+| VA 2 |     |
+| VA 3 |     |
+| VA 4 |     |
