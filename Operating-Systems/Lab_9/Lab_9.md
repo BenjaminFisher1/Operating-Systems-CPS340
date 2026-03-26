@@ -431,3 +431,282 @@ Virtual Address Trace
 | VA 4 | Seg1 violation, 128 - 106 = 22 > 20        |
 
 ### Segmentation Faults and Memory Leaks
+
+1. **First, write a simple program called null.c that creates a pointer**
+**to an integer, sets it to NULL, and then tries to dereference it. Com-**
+**pile this into an executable called null. What happens when you**
+**run this program?**
+
+We're running a program that's already provided to us rather than writing our own c. 
+
+```
+gcc null.c -o null
+
+~/Downloads via C v15.2.1-gcc via ☕ via 🐍 v3.14.3 
+❯ ./null
+Before crash
+Segmentation fault         (core dumped) ./null
+
+~/Downloads via C v15.2.1-gcc via ☕ via 🐍 v3.14.3 
+❯ echo $?
+139
+
+```
+
+We have a seg fault at address 139, which dumps the core and crashes the program. 
+
+```
+gcc -g null.c -o null  
+▪ -g will enable debugging  
+▪ Compare output when you don’t use -g
+```
+
+2. **While using the -g flag and gdb:**
+
+```
+gcc -g null.c -o nulld
+
+gdb
+```
+
+in gdb:
+```
+(gdb) run
+Starting program: /var/home/b/Downloads/nulld 
+
+Before crash
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00005555555551bf in main () at null.c:9
+9	    printf("%d\n", *ptr);  // crash here -> segmentation fault
+```
+
+Looks like on line 9 of the program, a pointer that points to a memory address the program doesn't have permission to read is dereferenced, leading to seg fault.
+
+```
+(gdb) list
+4	    int *ptr = NULL;
+5	
+6	    printf("Before crash\n");
+7	    fflush(stdout);   
+8	
+9	    printf("%d\n", *ptr);  // crash here -> segmentation fault
+10	
+11	    printf("After crash\n");  // never reached
+12	    return
+```
+
+This is showing the code executed before the crash, the location of the crash, as well as the lines not executed due to the segmentation fault.
+
+```
+(gdb) print ptr
+$1 = (int *) 0x0
+```
+
+So ptr points to 0x0, which is the null pointer.  This is reserved to the operating system, and programs are prevented from dereferencing it. That prevention caused our seg fault.
+
+```
+(gdb) bt
+#0  0x00005555555551bf in main () at null.c:9
+```
+
+bt in gdb is stack trace. This shows a trace of the stack leading up to the seg fault.
+
+3. **Finally, use the valgrind tool on this program. We’ll use memcheck**
+**that is a part of valgrind to analyze what happens. Run this by**
+**typing in the following: valgrind --leak-check=yes ./null.**
+**What happens when you run this? Can you interpret the output**
+**from the tool?**
+
+First, I need to install valgrind to my ubuntu container. After installing, I'll run: `valgrind --leak-check=yes ./null`. 
+
+```
+📦[b@ubuntu Downloads]$ valgrind --leak-check=yes ./null
+==6464== Memcheck, a memory error detector
+==6464== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==6464== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==6464== Command: ./null
+==6464== 
+Before crash
+==6464== Invalid read of size 4
+==6464==    at 0x4004B3: main (in /var/home/b/Downloads/null)
+==6464==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==6464== 
+==6464== 
+==6464== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+==6464==  Access not within mapped region at address 0x0
+==6464==    at 0x4004B3: main (in /var/home/b/Downloads/null)
+==6464==  If you believe this happened as a result of a stack
+==6464==  overflow in your program's main thread (unlikely but
+==6464==  possible), you can try to increase the size of the
+==6464==  main thread stack using the --main-stacksize= flag.
+==6464==  The main thread stack size used in this run was 8388608.
+==6464== 
+==6464== HEAP SUMMARY:
+==6464==     in use at exit: 1,024 bytes in 1 blocks
+==6464==   total heap usage: 1 allocs, 0 frees, 1,024 bytes allocated
+==6464== 
+==6464== LEAK SUMMARY:
+==6464==    definitely lost: 0 bytes in 0 blocks
+==6464==    indirectly lost: 0 bytes in 0 blocks
+==6464==      possibly lost: 0 bytes in 0 blocks
+==6464==    still reachable: 1,024 bytes in 1 blocks
+==6464==         suppressed: 0 bytes in 0 blocks
+==6464== Reachable blocks (those to which a pointer was found) are not shown.
+==6464== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==6464== 
+==6464== For lists of detected and suppressed errors, rerun with: -s
+==6464== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+Segmentation fault (core dumped)
+```
+
+Valgrind is telling us "you tried to access 0x0 without stack, malloc, or free applied to it" We can also see the size of memory allocated to the program in the heap (1024 bytes).
+
+4. **Write a simple program that allocates memory using malloc() but
+forgets to free it before exiting. What happens when this program
+runs? Can you use gdb to find any problems with it? How about
+valgrind (again with the --leak-check=yes flag)?**
+
+We are given a malloc.c program to use. 
+
+Normal run: 
+```
+📦[b@ubuntu Downloads]$ gcc -g mallocd.c -o malloc
+📦[b@ubuntu Downloads]$ ./malloc
+Value: 42
+```
+
+Gdb does not catch any problems, but valgrind finds:
+
+```
+📦[b@ubuntu Downloads]$ valgrind --leak-check=yes ./malloc
+==6574== Memcheck, a memory error detector
+==6574== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==6574== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==6574== Command: ./malloc
+==6574== 
+Value: 42
+==6574== 
+==6574== HEAP SUMMARY:
+==6574==     in use at exit: 4 bytes in 1 blocks
+==6574==   total heap usage: 2 allocs, 1 frees, 1,028 bytes allocated
+==6574== 
+==6574== 4 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==6574==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6574==    by 0x10919E: main (mallocd.c:6)
+==6574== 
+==6574== LEAK SUMMARY:
+==6574==    definitely lost: 4 bytes in 1 blocks
+==6574==    indirectly lost: 0 bytes in 0 blocks
+==6574==      possibly lost: 0 bytes in 0 blocks
+==6574==    still reachable: 0 bytes in 0 blocks
+==6574==         suppressed: 0 bytes in 0 blocks
+==6574== 
+==6574== For lists of detected and suppressed errors, rerun with: -s
+==6574== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+```
+
+A leak of 4 bytes!!
+
+5. **Write a program that creates an array of integers called data of size**
+**100 using malloc; then, set data[100] to zero. What happens**
+**when you run this program? What happens when you run this**
+**program using valgrind? Is the program correct?**
+
+We are given a program for this as well. 
+
+Running with gdb:
+```
+(gdb) run
+Starting program: /var/home/b/Downloads/array 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <ima:enforcing>
+  <https://debuginfod.fedoraproject.org/>
+  <ima:ignore>
+Enable debuginfod for this session? (y or [n]) y
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Allocated 100 integers.
+Setting data[100] = 0 (out-of-bounds)
+Done
+[Inferior 1 (process 6612) exited normally]
+```
+
+Looks like this program is attempting to set data[100] to an out of bounds location.
+
+6. **Create a program that allocates an array of integers (as above), frees**
+**them, and then tries to print the value of one of the elements of**
+**the array. Does the program run? What happens when you use**
+**valgrind on it?**
+
+Same program, but we uncomment the line: 
+
+```c
+//question 6
+        printf("data[10] after free: %d\n", data[10]);
+
+```
+
+
+Let's recompile with gcc and run in gdb. 
+
+Same output in gdb. 
+
+What about Valgrind?
+
+```
+📦[b@ubuntu Downloads]$ valgrind --leak-check=yes ./array
+==6638== Memcheck, a memory error detector
+==6638== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==6638== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==6638== Command: ./array
+==6638== 
+Allocated 100 integers.
+Setting data[100] = 0 (out-of-bounds)
+==6638== Invalid write of size 4
+==6638==    at 0x1091E8: main (array.c:19)
+==6638==  Address 0x4a761d0 is 0 bytes after a block of size 400 alloc'd
+==6638==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6638==    by 0x10919E: main (array.c:8)
+==6638== 
+Done
+==6638== 
+==6638== HEAP SUMMARY:
+==6638==     in use at exit: 0 bytes in 0 blocks
+==6638==   total heap usage: 2 allocs, 2 frees, 1,424 bytes allocated
+==6638== 
+==6638== All heap blocks were freed -- no leaks are possible
+==6638== 
+==6638== For lists of detected and suppressed errors, rerun with: -s
+==6638== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+```
+
+We can see more detail about the error. The program attempts to write something of size four to address 0x4a761d0, which has not been malloced or freed. So the main program is pointing to a non allocated memory block.
+
+
+7. **Now pass a funny value to free (e.g., a pointer in the middle of the
+array you allocated above). What happens? Do you need tools to
+find this type of problem?**
+
+We're using a given program for "funny.c". Running this immediately warns us:
+
+```
+gcc -g funny.c -o  funny
+funny.c: In function ‘main’:
+funny.c:9:5: warning: ‘free’ called on pointer ‘data’ with nonzero offset 200 [-Wfree-nonheap-object]
+    9 |     free(data + 50);
+      |     ^~~~~~~~~~~~~~~
+funny.c:5:17: note: returned from ‘malloc’
+    5 |     int *data = malloc(100 * sizeof(int));
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+```
+
+We are shown an issue that would allow the program to free memory not allocated to it. 
+
+We do not need tools to find this error.
+
+
